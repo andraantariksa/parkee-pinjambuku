@@ -87,6 +87,7 @@ local_settings.py
 
 ## Python
 env/
+.ruff_cache/
 
 .env
 db.sqlite3
