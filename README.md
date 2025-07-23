@@ -32,7 +32,7 @@ Features:
 
 - `book`
   - `id` - uint - primary key
-  - `title` - varchar
+  - `title` - varchar -indexed
   - `isbn` - varchar - indexed
   - `created_at` - timestamp - indexed
   - `updated_at` - timestamp - nullable
@@ -43,15 +43,17 @@ Features:
   - `id` - uint - primary key
   - `book_id` - uint - foreign key
   - `expiration_date` - timestamp
-  - `created_at` - timestamp - indexed
-  - `updated_at` - timestamp - nullable
   - `return_date` - timestamp - nullable - indexed
   - `borrower_id` - uint
+  - `created_at` - timestamp - indexed
+  - `updated_at` - timestamp - nullable
 - `borrower`
   - `id` - uint - primary key
   - `id_card_number` - varchar - indexed
   - `name` - varchar
   - `email` - varchar
+  - `created_at` - timestamp - indexed
+  - `updated_at` - timestamp - nullable
 
 ### UI
 
