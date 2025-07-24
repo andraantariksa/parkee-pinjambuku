@@ -1,4 +1,5 @@
 from typing import Any
+from django.contrib.auth.models import AnonymousUser
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.contrib.sessions.backends.db import SessionStore
 from ninja.testing import TestClient
@@ -23,7 +24,7 @@ class SessionTestClient(TestClient):
         if user_id:
             mock.user = User.objects.get(pk=user_id)
         else:
-            mock.user = None
+            mock.user = AnonymousUser()
 
         messages = FallbackStorage(mock)
         mock._messages = messages

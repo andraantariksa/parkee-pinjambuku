@@ -14,7 +14,7 @@ class BookBorrowTransaction(TimestampedModel):
     return_date = models.DateField(null=True, blank=True)
 
     class Meta:
-        verbose_name = "book_borrow_transactions"
+        db_table = "book_borrow_transactions"
 
     def __str__(self):
         return f"{self.user.username} borrowed {self.book.title}: {self.created} - {self.return_date}"
