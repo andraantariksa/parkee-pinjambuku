@@ -42,7 +42,8 @@ Features:
 - `book_borrow_transaction`
   - `id` - uint - primary key
   - `book_id` - uint - foreign key
-  - `return_date` - timestamp - nullable - indexed
+  - `return_scheduled_date` - date
+  - `return_date` - date - nullable
   - `borrower_id` - uint
   - `created_at` - timestamp - indexed
   - `updated_at` - timestamp - nullable
