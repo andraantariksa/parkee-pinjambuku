@@ -69,10 +69,10 @@ Features:
 ### API
 
 - `v1`
-  - POST `books` - Create books [1]
   - GET `books` - List books
   - GET `borrowers/{id_card_numbers}` - Borrower details & loans [2][4][6][7]
   - POST `borrowers/{id_card_numbers}/borrow` - Borrow books [2][4][5][6][7][8]
   - POST `borrowers/{id_card_numbers}/return` - Return books [2][3]
   - POST `admin/login` - Admin login
   - GET `admin/transactions` - Get borrowed books [9]
+  - POST `admin/books` - Create books [1]

@@ -3,6 +3,8 @@ from django.contrib.messages.storage.fallback import FallbackStorage
 from django.contrib.sessions.backends.db import SessionStore
 from ninja.testing import TestClient
 
+from apps.users.models import User
+
 
 class SessionTestClient(TestClient):
     """Adds missing FallbackStorage and SessionStore to TestClient."""
@@ -16,6 +18,13 @@ class SessionTestClient(TestClient):
     def _build_request(self, *args: Any, **kwargs: Any) -> None:
         mock = super()._build_request(*args, **kwargs)
         mock.session = self.session
+
+        user_id = self.session.get("_auth_user_id", None)
+        if user_id:
+            mock.user = User.objects.get(pk=user_id)
+        else:
+            mock.user = None
+
         messages = FallbackStorage(mock)
         mock._messages = messages
         return mock
