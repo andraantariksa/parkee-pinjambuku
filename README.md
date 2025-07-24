@@ -47,7 +47,7 @@ Features:
   - `borrower_id` - uint
   - `created_at` - timestamp - indexed
   - `updated_at` - timestamp - nullable
-- `borrower`
+- `user`
   - `id` - uint - primary key
   - `id_card_number` - varchar - indexed
   - `name` - varchar
