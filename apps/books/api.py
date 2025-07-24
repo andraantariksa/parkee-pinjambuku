@@ -1,3 +1,4 @@
+from django.http import HttpRequest
 from ninja import Router
 
 from apps.books.models import Book
@@ -8,6 +9,5 @@ router = Router()
 
 
 @router.get("books/", response={200: list[BookSchema]})
-def list_books(request):
-    books = Book.objects.all()
-    return books
+def list_books(request: HttpRequest):
+    return Book.objects.all()
