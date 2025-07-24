@@ -12,6 +12,7 @@ def generate_id_card_number() -> str:
 class User(AbstractUser, TimestampedModel):
     first_name = None
     last_name = None
+    username = None
 
     email = models.EmailField("Email Address", unique=True)
     id_card_number = models.CharField(
