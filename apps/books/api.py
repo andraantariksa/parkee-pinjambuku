@@ -7,7 +7,7 @@ from apps.books.schemas import BookSchema
 router = Router()
 
 
-@router.get("/", response={200: list[BookSchema]})
+@router.get("books/", response={200: list[BookSchema]})
 def list_books(request):
     books = Book.objects.all()
     return books
