@@ -20,8 +20,11 @@ def admin_login(request: HttpRequest, data: AdminLoginIn):
     return 400, None
 
 
-@router.post("/admin/books", response={201: None}, auth=django_auth)
+@router.post("/admin/books", response={201: None, 400: None}, auth=django_auth)
 def books_create(request: HttpRequest, data: AdminCreateBook):
+    if not request.user.is_staff:
+        return 400, None
+
     book = Book.objects.create(title=data.title, isbn=data.isbn)
     BookStock.objects.create(book=book, stock=data.stock_quantity)
     return 201, None

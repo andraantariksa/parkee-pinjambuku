@@ -26,7 +26,7 @@ class AdminTest(TestCase):
             "email": email or self.email,
             "password": password or self.password,
         }
-        return self.client.post("/admin/login", json=login_data)
+        return self.client.post("admin/login", json=login_data)
 
     def test_admin_login(self) -> None:
         response = self.login(email="wrong@email.com", password="wrongpassword")
@@ -48,7 +48,7 @@ class AdminTest(TestCase):
         response = self.login()
 
         book_data = {"title": "Test Book", "isbn": "1234567890", "stock_quantity": 2}
-        response = self.client.post("/admin/books", json=book_data)
+        response = self.client.post("admin/books", json=book_data)
         self.assertEqual(response.status_code, 201)
 
         book = Book.objects.last()
