@@ -9,6 +9,8 @@ class AdminLoginIn(Schema):
 
 
 class AdminCreateBook(ModelSchema):
+    stock_quantity: int
+
     class Meta:
         model = Book
         fields = ["title", "isbn"]

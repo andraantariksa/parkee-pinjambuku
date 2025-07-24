@@ -47,9 +47,11 @@ class AdminTest(TestCase):
     def test_books_create(self) -> None:
         response = self.login()
 
-        book_data = {"title": "Test Book", "isbn": "1234567890"}
+        book_data = {"title": "Test Book", "isbn": "1234567890", "stock_quantity": 2}
         response = self.client.post("/admin/books", json=book_data)
         self.assertEqual(response.status_code, 201)
 
-        book_exists = Book.objects.filter(title="Test Book", isbn="1234567890").exists()
-        self.assertTrue(book_exists)
+        book = Book.objects.last()
+        self.assertEqual(book.title, "Test Book")
+        self.assertEqual(book.isbn, "1234567890")
+        self.assertEqual(book.stock.stock, 2)
