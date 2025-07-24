@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "apps.common",
     "apps.books",
     "apps.users",
+    "apps.borrows",
 ]
 
 MIDDLEWARE = [
