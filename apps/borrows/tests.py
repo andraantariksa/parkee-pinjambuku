@@ -170,15 +170,15 @@ class BorrowsTestCase(TestCase):
             created_at="2023-12-01T00:00:00Z",
         )
 
-        response = self.client.get("borrowers/000")
+        response = self.client.post("borrowers/000", json={"email": user_1.email})
         self.assertEqual(response.status_code, 401)
 
         self.client.session["_auth_user_id"] = user_1.id
 
-        response = self.client.get("borrowers/000")
+        response = self.client.post("borrowers/000", json={"email": user_1.email})
         self.assertEqual(response.status_code, 404)
 
-        response = self.client.get(f"borrowers/{user_1.id_card_number}")
+        response = self.client.post(f"borrowers/{user_1.id_card_number}", json={"email": user_1.email})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response.json(),
