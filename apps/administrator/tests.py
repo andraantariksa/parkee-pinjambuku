@@ -3,7 +3,7 @@ from django.test import TestCase
 
 
 from apps.books.models import Book
-from apps.admin.api import router
+from apps.administrator.api import router
 from apps.users.models import User
 from tests.utils import SessionTestClient
 
