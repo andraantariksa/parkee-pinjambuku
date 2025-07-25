@@ -25,7 +25,9 @@ router = Router()
     "borrowers/{id_card_number}",
     response={200: BorrowerDetailsSchema},
 )
-def borrowers_details(request: HttpRequest, id_card_number: str, data: BorrowersSchema):
+def borrowers_details(
+    request: HttpRequest, id_card_number: str, data: BorrowersSchema
+) -> BorrowerDetailsSchema:
     user = get_object_or_404(User, id_card_number=id_card_number, email=data.email)
     return BorrowerDetailsSchema(
         borrow_transactions=BookBorrowTransaction.objects.filter(borrower=user),
@@ -36,7 +38,9 @@ def borrowers_details(request: HttpRequest, id_card_number: str, data: Borrowers
     "borrowers/{id_card_number}/borrow",
     response={200: None, 400: dict},
 )
-def borrow_book(request: HttpRequest, id_card_number: str, data: BorrowRequestSchema):
+def borrow_book(
+    request: HttpRequest, id_card_number: str, data: BorrowRequestSchema
+) -> tuple[int, None | dict]:
     user = get_object_or_404(User, id_card_number=id_card_number, email=data.email)
     book = get_object_or_404(Book, id=data.book_id)
 
@@ -73,7 +77,9 @@ def borrow_book(request: HttpRequest, id_card_number: str, data: BorrowRequestSc
     "borrowers/{id_card_number}/return",
     response={200: None, 400: dict},
 )
-def return_book(request: HttpRequest, id_card_number: str, data: ReturnRequestSchema):
+def return_book(
+    request: HttpRequest, id_card_number: str, data: ReturnRequestSchema
+) -> tuple[int, None | dict]:
     user = get_object_or_404(User, id_card_number=id_card_number, email=data.email)
     book = get_object_or_404(Book, id=data.book_id)
 

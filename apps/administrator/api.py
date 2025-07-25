@@ -1,3 +1,4 @@
+from typing import Any
 from ninja import Router
 from django.db.models import Q
 from django.utils import timezone
@@ -18,7 +19,7 @@ router = Router()
 
 
 @router.post("/admin/login", response={200: None, 400: None})
-def admin_login(request: HttpRequest, data: AdminLoginIn):
+def admin_login(request: HttpRequest, data: AdminLoginIn) -> tuple[int, None]:
     user = authenticate(request, email=data.email, password=data.password)
     if user and user.is_staff:
         login(request, user)
@@ -28,7 +29,7 @@ def admin_login(request: HttpRequest, data: AdminLoginIn):
 
 
 @router.post("/admin/books", response={201: None, 400: None}, auth=django_auth)
-def books_create(request: HttpRequest, data: AdminCreateBook):
+def books_create(request: HttpRequest, data: AdminCreateBook) -> tuple[int, None]:
     if not request.user.is_staff:
         return 400, None
 
@@ -42,7 +43,7 @@ def books_create(request: HttpRequest, data: AdminCreateBook):
     response={200: BookTransactionsSchema, 400: None},
     auth=django_auth,
 )
-def books_transactions(request: HttpRequest):
+def books_transactions(request: HttpRequest) -> tuple[int, dict[str, Any] | None]:
     if not request.user.is_staff:
         return 400, None
 
