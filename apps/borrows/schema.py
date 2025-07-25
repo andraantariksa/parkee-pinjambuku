@@ -13,3 +13,14 @@ class BookBorrowTransactionSchema(Schema):
 
 class BorrowerDetailsSchema(Schema):
     borrow_transactions: list[BookBorrowTransactionSchema]
+
+
+class BorrowRequestSchema(Schema):
+    book_id: int
+    email: str
+    return_scheduled_date: date
+
+
+class ReturnRequestSchema(Schema):
+    book_id: int
+    email: str
