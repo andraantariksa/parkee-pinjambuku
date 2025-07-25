@@ -22,6 +22,7 @@ Open http://localhost:5173/admin for admin
 
 ```
 pip install -r requirements.txt
+python manage.py migrate
 python manage.py runserver 8080
 python manage.py create_fake_data
 ```
