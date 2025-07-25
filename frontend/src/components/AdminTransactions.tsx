@@ -56,8 +56,14 @@ const AdminTransactions: React.FC = () => {
                 <td>{tx.user.email}</td>
                 <td>{tx.book.title}</td>
                 <td>{new Date(tx.created_at).toLocaleString()}</td>
-                <td>{new Date(tx.return_scheduled_date).toLocaleDateString()}</td>
-                <td>{tx.return_date ? new Date(tx.return_date).toLocaleDateString() : "-" }</td>
+                <td>
+                  {new Date(tx.return_scheduled_date).toLocaleDateString()}
+                </td>
+                <td>
+                  {tx.return_date
+                    ? new Date(tx.return_date).toLocaleDateString()
+                    : "-"}
+                </td>
               </tr>
             ))}
           </tbody>

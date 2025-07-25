@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import {
+  fetchAdminTransactions,
+  type AdminTransaction,
+  type BorrowerDetails,
+} from "../data/api";
 
 interface Book {
   id: number;
@@ -11,9 +16,9 @@ interface Book {
 const BookTransactions: React.FC = () => {
   const navigate = useNavigate();
 
-  const { data, error, isLoading } = useQuery<BorrowerDetails, Error>({
+  const { data, error, isLoading } = useQuery<any, Error>({
     queryKey: ["book-transactions"],
-    queryFn: fetchTransactions,
+    queryFn: fetchAdminTransactions,
   });
 
   if (error && error.message === "Unauthorized") {

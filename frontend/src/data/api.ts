@@ -116,9 +116,12 @@ export interface AdminTransaction {
 }
 
 export const fetchAdminTransactions = async (): Promise<AdminTransaction[]> => {
-  const response = await fetch(`http://127.0.0.1:8000/api/v1/admin/transactions`, {
-    credentials: "include",
-  });
+  const response = await fetch(
+    `http://127.0.0.1:8000/api/v1/admin/transactions`,
+    {
+      credentials: "include",
+    },
+  );
   if (response.status === 200) {
     return response.json();
   } else if (response.status >= 400 && response.status < 500) {

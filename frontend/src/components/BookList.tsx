@@ -19,9 +19,9 @@ export default function BookList() {
         email: member!.email,
         name: member!.name,
       }),
-      onSuccess: () => {
-        memberContext.refetch();
-      }
+    onSuccess: () => {
+      memberContext.refetch();
+    },
   });
 
   useEffect(() => {
@@ -44,7 +44,9 @@ export default function BookList() {
       <h1>Book List</h1>
       {isLoading && <div>Loading...</div>}
       {error && <div style={{ color: "red" }}>Error: {error.message}</div>}
-      {returnMutation.error && <p style={{ color: "red" }}>{returnMutation.error.message}</p>}
+      {returnMutation.error && (
+        <p style={{ color: "red" }}>{returnMutation.error.message}</p>
+      )}
       {books && memberContext.data && (
         <ul>
           {books.map((book: Book) => (
@@ -64,7 +66,9 @@ export default function BookList() {
                   returnMutation.mutate(book.id);
                 }}
                 style={{ marginLeft: "5px" }}
-                disabled={isPending || memberContext.borrowTrx?.book?.id !== book.id}
+                disabled={
+                  isPending || memberContext.borrowTrx?.book?.id !== book.id
+                }
               >
                 Return
               </button>
@@ -74,4 +78,4 @@ export default function BookList() {
       )}
     </div>
   );
-};
+}

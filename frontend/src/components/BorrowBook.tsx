@@ -10,8 +10,8 @@ export default function BorrowBook() {
   const navigate = useNavigate();
   const { books } = useBooks();
   const book = useBook(id, books);
-    const memberContext = useMember();
-    const member = memberContext.member;
+  const memberContext = useMember();
+  const member = memberContext.member;
 
   const [form, setForm] = useState({
     returnDate: "",
@@ -29,9 +29,9 @@ export default function BorrowBook() {
   });
 
   useEffect(() => {
-      if (member) return;
-      navigate("/");
-    }, [member, navigate]);
+    if (member) return;
+    navigate("/");
+  }, [member, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -55,10 +55,12 @@ export default function BorrowBook() {
   }
 
   return (
-    <form onSubmit={(e) => {
-      e.preventDefault();
-      mutation.mutate()
-    }}>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        mutation.mutate();
+      }}
+    >
       <h1>Borrow Book</h1>
       <button onClick={() => navigate("/books")}>Back to Book List</button>
       <p>
@@ -79,10 +81,7 @@ export default function BorrowBook() {
           />
         </label>
       </div>
-      <button
-        type="submit"
-        disabled={mutation.isPending ?? false}
-      >
+      <button type="submit" disabled={mutation.isPending ?? false}>
         Borrow Book
       </button>
       {mutation.isPending && <p>Loading...</p>}

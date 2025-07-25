@@ -67,7 +67,17 @@ export const MemberProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   return (
-    <MemberContext.Provider value={{ member, setMember, data, refetch, error, isLoading, borrowTrx: borrowing }}>
+    <MemberContext.Provider
+      value={{
+        member,
+        setMember,
+        data,
+        refetch,
+        error,
+        isLoading,
+        borrowTrx: borrowing,
+      }}
+    >
       {children}
     </MemberContext.Provider>
   );
