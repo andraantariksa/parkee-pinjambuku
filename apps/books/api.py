@@ -9,5 +9,5 @@ router = Router()
 
 
 @router.get("books/", response={200: list[BookSchema]})
-def list_books(request: HttpRequest):
+def list_books(request: HttpRequest) -> list[Book]:
     return Book.objects.all()

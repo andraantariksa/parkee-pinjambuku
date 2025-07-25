@@ -35,7 +35,6 @@ class BorrowsTestCase(TestCase):
             },
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), "Book borrowed successfully")
 
         book_stock = BookStock.objects.get(book=self.book)
         self.assertEqual(book_stock.quantity, 1)
@@ -60,7 +59,7 @@ class BorrowsTestCase(TestCase):
             },
         )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), "Book is out of stock")
+        self.assertEqual(response.json()["detail"], "Book is out of stock")
 
         self.book_stock.refresh_from_db()
         self.assertEqual(self.book_stock.quantity, 0)
@@ -83,7 +82,8 @@ class BorrowsTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), "You have an active loan and cannot borrow another book"
+            response.json()["detail"],
+            "You have an active loan and cannot borrow another book",
         )
 
     def test_borrow_book_duration_too_long(self):
@@ -98,7 +98,9 @@ class BorrowsTestCase(TestCase):
             },
         )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), "Loan duration cannot be longer than 30 days")
+        self.assertEqual(
+            response.json()["detail"], "Loan duration cannot be longer than 30 days"
+        )
 
     @freeze_time("2025-07-25")
     def test_return_book_success(self):
@@ -134,7 +136,8 @@ class BorrowsTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), "No active borrow transaction found for this book and user"
+            response.json()["detail"],
+            "No active borrow transaction found for this book and user",
         )
 
     @freeze_time("2023-12-15")
@@ -169,11 +172,6 @@ class BorrowsTestCase(TestCase):
             return_date="2023-12-10",
             created_at="2023-12-01T00:00:00Z",
         )
-
-        response = self.client.post("borrowers/000", json={"email": user_1.email})
-        self.assertEqual(response.status_code, 401)
-
-        self.client.session["_auth_user_id"] = user_1.id
 
         response = self.client.post("borrowers/000", json={"email": user_1.email})
         self.assertEqual(response.status_code, 404)

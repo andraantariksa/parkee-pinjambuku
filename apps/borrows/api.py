@@ -3,7 +3,6 @@ from django.db.models import F
 from django.shortcuts import get_object_or_404
 
 from ninja import Router
-from ninja.security import django_auth
 
 from django.utils import timezone
 from datetime import timedelta
@@ -26,7 +25,9 @@ router = Router()
     "borrowers/{id_card_number}",
     response={200: BorrowerDetailsSchema},
 )
-def borrowers_details(request: HttpRequest, id_card_number: str, data: BorrowersSchema):
+def borrowers_details(
+    request: HttpRequest, id_card_number: str, data: BorrowersSchema
+) -> BorrowerDetailsSchema:
     user = get_object_or_404(User, id_card_number=id_card_number, email=data.email)
     return BorrowerDetailsSchema(
         borrow_transactions=BookBorrowTransaction.objects.filter(borrower=user),
@@ -37,26 +38,28 @@ def borrowers_details(request: HttpRequest, id_card_number: str, data: Borrowers
     "borrowers/{id_card_number}/borrow",
     response={200: None, 400: dict},
 )
-def borrow_book(request: HttpRequest, id_card_number: str, data: BorrowRequestSchema):
+def borrow_book(
+    request: HttpRequest, id_card_number: str, data: BorrowRequestSchema
+) -> tuple[int, None | dict]:
     user = get_object_or_404(User, id_card_number=id_card_number, email=data.email)
     book = get_object_or_404(Book, id=data.book_id)
 
     book_stock, _ = BookStock.objects.get_or_create(book=book)
     if book_stock.quantity < 1:
-        return 400, {"detail": "Book is out of stock" }
+        return 400, {"detail": "Book is out of stock"}
 
     has_active_loan = BookBorrowTransaction.objects.filter(
         borrower=user, return_date__isnull=True
     ).exists()
     if has_active_loan:
-        return 400, { "detail": "You have an active loan and cannot borrow another book" }
+        return 400, {"detail": "You have an active loan and cannot borrow another book"}
 
     if data.return_scheduled_date < timezone.localdate():
-        return 400, { "detail": "You cant set return date in the past" }
+        return 400, {"detail": "You cant set return date in the past"}
 
     MAX_LOAN_DURATION = timedelta(days=30)
     if data.return_scheduled_date > timezone.localdate() + MAX_LOAN_DURATION:
-        return 400, { "detail": "Loan duration cannot be longer than 30 days" }
+        return 400, {"detail": "Loan duration cannot be longer than 30 days"}
 
     BookBorrowTransaction.objects.create(
         book=book,
@@ -74,7 +77,9 @@ def borrow_book(request: HttpRequest, id_card_number: str, data: BorrowRequestSc
     "borrowers/{id_card_number}/return",
     response={200: None, 400: dict},
 )
-def return_book(request: HttpRequest, id_card_number: str, data: ReturnRequestSchema):
+def return_book(
+    request: HttpRequest, id_card_number: str, data: ReturnRequestSchema
+) -> tuple[int, None | dict]:
     user = get_object_or_404(User, id_card_number=id_card_number, email=data.email)
     book = get_object_or_404(Book, id=data.book_id)
 
@@ -84,7 +89,9 @@ def return_book(request: HttpRequest, id_card_number: str, data: ReturnRequestSc
         return_date=None,
     ).first()
     if not borrow_transaction:
-        return 400, {"detail": "No active borrow transaction found for this book and user"}
+        return 400, {
+            "detail": "No active borrow transaction found for this book and user"
+        }
 
     borrow_transaction.return_date = timezone.localdate()
     borrow_transaction.save()
