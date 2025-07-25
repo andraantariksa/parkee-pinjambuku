@@ -54,4 +54,4 @@ class AdminTest(TestCase):
         book = Book.objects.last()
         self.assertEqual(book.title, "Test Book")
         self.assertEqual(book.isbn, "1234567890")
-        self.assertEqual(book.stock.stock, 2)
+        self.assertEqual(book.stock.quantity, 2)

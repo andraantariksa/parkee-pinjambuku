@@ -26,5 +26,5 @@ def books_create(request: HttpRequest, data: AdminCreateBook):
         return 400, None
 
     book = Book.objects.create(title=data.title, isbn=data.isbn)
-    BookStock.objects.create(book=book, stock=data.stock_quantity)
+    BookStock.objects.create(book=book, quantity=data.stock_quantity)
     return 201, None

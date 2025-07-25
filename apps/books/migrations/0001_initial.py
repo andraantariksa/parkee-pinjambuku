@@ -45,7 +45,7 @@ class Migration(migrations.Migration):
                         to="books.book",
                     ),
                 ),
-                ("stock", models.PositiveIntegerField(default=0)),
+                ("quantity", models.PositiveIntegerField(default=0)),
             ],
             options={
                 "db_table": "book_stock",
