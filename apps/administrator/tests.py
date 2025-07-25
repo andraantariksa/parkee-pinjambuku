@@ -1,9 +1,12 @@
+from django.utils import timezone
+from datetime import timedelta
 from django.http import HttpResponse
 from django.test import TestCase
 
 
 from apps.books.models import Book
 from apps.administrator.api import router
+from apps.borrows.models import BookBorrowTransaction
 from apps.users.models import User
 from tests.utils import SessionTestClient
 
@@ -55,3 +58,54 @@ class AdminTest(TestCase):
         self.assertEqual(book.title, "Test Book")
         self.assertEqual(book.isbn, "1234567890")
         self.assertEqual(book.stock.quantity, 2)
+
+    def test_books_transactions(self) -> None:
+        book_1 = Book.objects.create(
+            title="Book 1",
+            isbn="111",
+        )
+        transaction_1 = BookBorrowTransaction.objects.create(
+            book=book_1,
+            borrower=self.admin_user,
+            return_scheduled_date=timezone.localdate() - timedelta(days=1),
+        )
+
+        book_2 = Book.objects.create(
+            title="Book 2",
+            isbn="222",
+        )
+        transaction_2 = BookBorrowTransaction.objects.create(
+            book=book_2,
+            borrower=self.admin_user,
+            return_date=timezone.localdate(),
+            return_scheduled_date=timezone.localdate(),
+        )
+        transaction_3 = BookBorrowTransaction.objects.create(
+            book=book_2,
+            borrower=self.admin_user,
+            return_date=timezone.localdate(),
+            return_scheduled_date=timezone.localdate() + timedelta(days=2),
+        )
+        transaction_4 = BookBorrowTransaction.objects.create(
+            book=book_2,
+            borrower=self.admin_user,
+            return_date=timezone.localdate(),
+            return_scheduled_date=timezone.localdate() - timedelta(days=1),
+        )
+
+        self.login()
+        response = self.client.get("admin/transactions")
+        self.assertEqual(response.status_code, 200)
+        transactions = response.json()["transactions"]
+
+        self.assertEqual(transactions[0]["id"], transaction_4.id)
+        self.assertTrue(transactions[0]["is_late"])
+
+        self.assertEqual(transactions[1]["id"], transaction_3.id)
+        self.assertFalse(transactions[1]["is_late"])
+
+        self.assertEqual(transactions[2]["id"], transaction_2.id)
+        self.assertFalse(transactions[2]["is_late"])
+
+        self.assertEqual(transactions[3]["id"], transaction_1.id)
+        self.assertTrue(transactions[3]["is_late"])
