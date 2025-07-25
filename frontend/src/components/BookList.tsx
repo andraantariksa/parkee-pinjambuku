@@ -30,7 +30,23 @@ const BookList: React.FC = () => {
         <ul>
           {data.map((book: Book) => (
             <li key={book.id}>
-              <strong>{book.title}</strong> (ISBN: {book.isbn})
+              <strong>{book.title}</strong> (ISBN: {book.isbn}){" "}
+              <button
+                onClick={() => {
+                  window.location.href = `/books/${book.id}/borrow`;
+                }}
+                style={{ marginLeft: "10px" }}
+              >
+                Borrow
+              </button>
+              <button
+                onClick={() => {
+                  window.location.href = `/books/${book.id}/return`;
+                }}
+                style={{ marginLeft: "5px" }}
+              >
+                Return
+              </button>
             </li>
           ))}
         </ul>
