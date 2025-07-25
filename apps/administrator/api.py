@@ -4,7 +4,7 @@ from django.http import HttpRequest
 from ninja.security import django_auth
 
 from apps.books.models import Book, BookStock
-from apps.admin.schema import AdminLoginIn, AdminCreateBook
+from apps.administrator.schema import AdminLoginIn, AdminCreateBook
 
 
 router = Router()
