@@ -25,6 +25,7 @@ api = NinjaAPI()
 api.add_router(f"{api_prefix}", "apps.common.api.router")
 api.add_router(f"{api_v1_prefix}", "apps.administrator.api.router")
 api.add_router(f"{api_v1_prefix}", "apps.books.api.router")
+api.add_router(f"{api_v1_prefix}", "apps.borrows.api.router")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
