@@ -1,5 +1,44 @@
 # PinjamBuku
 
+## Prequisities
+
+- Python 3.12
+- PNPM
+
+## Getting Started
+
+## Run the frontend
+
+```
+cd frontend/
+pnpm install
+pnpm dev
+```
+
+Open http://localhost:5173/ for customer
+Open http://localhost:5173/admin for admin
+
+## Run the backend
+
+```
+pip install -r requirements.txt
+python manage.py runserver 8080
+python manage.py create_fake_data
+```
+
+Open http://localhost:8080/admin/ for backend admin
+Open http://localhost:8080/docs/ docs
+
+## Default credential
+
+For customer and admin
+
+Email: admin@example.com
+Password: 123
+ID Card Number: 123
+
+---
+
 Features:
 
 1. [x] Book Data Entry: Input book details (title, ISBN, stock).
@@ -77,3 +116,9 @@ Features:
   - POST `admin/login` - Admin login
   - GET `admin/transactions` - Get borrowed books [9]
   - POST `admin/books` - Create books [1]
+
+---
+
+Note:
+
+Due to the time limit, I was unable to finish the admin UI in react. You can use backend admin as a workaround http://localhost:8080/admin/

@@ -6,9 +6,8 @@ import {
   Navigate,
 } from "react-router-dom";
 import BookList from "./components/BookList";
-import { BookProvider } from "./components/BookContext";
+import { BookProvider } from "./context/BookContext";
 import BorrowBook from "./components/BorrowBook";
-import ReturnBook from "./components/ReturnBook";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import BookTransactions from "./components/BookTransactions";
 import AdminLogin from "./components/AdminLogin";
@@ -25,9 +24,8 @@ export default function App() {
           <Router>
             <Routes>
               <Route path="/" element={<Login />} />
-              <Route path="/books" element={<BookList />} />
               <Route path="/books/:id/borrow" element={<BorrowBook />} />
-              <Route path="/books/:id/return" element={<ReturnBook />} />
+              <Route path="/books" element={<BookList />} />
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route
                 path="/admin/book-transactions"

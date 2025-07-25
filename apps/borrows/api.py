@@ -86,7 +86,7 @@ def return_book(
     borrow_transaction = BookBorrowTransaction.objects.filter(
         borrower=user,
         book=book,
-        return_date__isnull=True,
+        return_date=None,
     ).first()
     if not borrow_transaction:
         return 400, {
