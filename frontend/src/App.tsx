@@ -3,5 +3,5 @@ export default function App() {
     <>
       <p>Hi there</p>
     </>
-  )
+  );
 }
