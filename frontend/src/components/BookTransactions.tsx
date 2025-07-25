@@ -8,31 +8,6 @@ interface Book {
   isbn: string;
 }
 
-interface BookBorrowTransaction {
-  id: number;
-  return_date: string | null;
-  return_scheduled_date: string;
-  created_at: string;
-  book: Book;
-}
-
-interface BorrowerDetails {
-  borrow_transactions: BookBorrowTransaction[];
-}
-
-const fetchTransactions = async (): Promise<BorrowerDetails> => {
-  const response = await fetch(`http://127.0.0.1:8000/api/v1/admin/books`, {
-    credentials: "include",
-  });
-  if (response.status === 200) {
-    return response.json();
-  } else if (response.status >= 400 && response.status < 500) {
-    throw new Error("Unauthorized");
-  } else {
-    throw new Error(`${response.status} status code`);
-  }
-};
-
 const BookTransactions: React.FC = () => {
   const navigate = useNavigate();
 

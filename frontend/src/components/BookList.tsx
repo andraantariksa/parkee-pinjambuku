@@ -1,49 +1,74 @@
-import React from "react";
-import { useQuery } from "@tanstack/react-query";
+import React, { useEffect, useState } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { useBooks } from "../context/BookContext";
+import { useMember } from "../context/MemberContext";
+import { useNavigate } from "react-router-dom";
+import { borrowBook, returnBook, fetchBooks, type Book } from "../data/api";
 
-interface Book {
-  id: number;
-  title: string;
-  isbn: string;
-}
+export default function BookList() {
+  const { books, isLoading, error, refetch } = useBooks();
+  const memberContext = useMember();
+  const member = memberContext.member;
+  const navigate = useNavigate();
 
-const fetchBooks = async (): Promise<Book[]> => {
-  const response = await fetch("http://127.0.0.1:8000/api/v1/books");
-  if (!response.ok) {
-    throw new Error(`${response.status} status code`);
-  }
-  return response.json();
-};
-
-const BookList: React.FC = () => {
-  const { data, error, isLoading } = useQuery<Array<Book>, Error>({
-    queryKey: ["fetch-books"],
-    queryFn: fetchBooks,
+  const borrowMutation = useMutation<void, Error, number>({
+    mutationFn: (bookId) =>
+      borrowBook({
+        bookId,
+        idCardNumber: member!.idCardNumber,
+        returnDate: "",
+        email: member!.email,
+        name: member!.name,
+      }),
   });
+
+  const returnMutation = useMutation<void, Error, number>({
+    mutationFn: (bookId) =>
+      returnBook({
+        bookId,
+        idCardNumber: member!.idCardNumber,
+        email: member!.email,
+        name: member!.name,
+      }),
+  });
+
+  useEffect(() => {
+    if (member) return;
+    navigate("/");
+  }, [member, navigate]);
+
+  const isPending = borrowMutation.isPending || returnMutation.isPending;
+
+  useEffect(() => {
+    refetch();
+  }, [borrowMutation.isSuccess, returnMutation.isSuccess]);
 
   return (
     <div>
       <h1>Book List</h1>
       {isLoading && <div>Loading...</div>}
       {error && <div style={{ color: "red" }}>Error: {error.message}</div>}
-      {data && (
+      {returnMutation.error && <p style={{ color: "red" }}>{returnMutation.error.message}</p>}
+      {books && (
         <ul>
-          {data.map((book: Book) => (
+          {books.map((book: Book) => (
             <li key={book.id}>
               <strong>{book.title}</strong> (ISBN: {book.isbn}){" "}
               <button
                 onClick={() => {
-                  window.location.href = `/books/${book.id}/borrow`;
+                  borrowMutation.mutate(book.id);
                 }}
                 style={{ marginLeft: "10px" }}
+                disabled={isPending}
               >
                 Borrow
               </button>
               <button
                 onClick={() => {
-                  window.location.href = `/books/${book.id}/return`;
+                  returnMutation.mutate(book.id);
                 }}
                 style={{ marginLeft: "5px" }}
+                disabled={isPending}
               >
                 Return
               </button>
@@ -54,5 +79,3 @@ const BookList: React.FC = () => {
     </div>
   );
 };
-
-export default BookList;

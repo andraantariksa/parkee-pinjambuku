@@ -1,5 +1,6 @@
 import React, { createContext, useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { fetchBooks } from "../data/api";
 
 interface Book {
   id: number;
@@ -11,32 +12,26 @@ interface BookContextValue {
   books: Book[] | undefined;
   isLoading: boolean;
   error: Error | null;
+  refetch: () => void;
 }
 
 const BookContext = createContext<BookContextValue>({
   books: undefined,
   isLoading: false,
   error: null,
+  refetch: () => {},
 });
-
-const fetchBooks = async (): Promise<Book[]> => {
-  const response = await fetch("http://127.0.0.1:8000/api/v1/books");
-  if (!response.ok) {
-    throw new Error(`${response.status} status code`);
-  }
-  return response.json();
-};
 
 export const BookProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { data, error, isLoading } = useQuery<Book[], Error>({
+  const { data, error, isLoading, refetch } = useQuery<Book[], Error>({
     queryKey: ["fetch-books"],
     queryFn: fetchBooks,
   });
 
   return (
-    <BookContext.Provider value={{ books: data, isLoading, error }}>
+    <BookContext.Provider value={{ books: data, isLoading, error, refetch }}>
       {children}
     </BookContext.Provider>
   );
