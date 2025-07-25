@@ -21,7 +21,7 @@ class BorrowsTestCase(TestCase):
             title="Book 1",
             isbn="111",
         )
-        self.book_stock = BookStock.objects.create(book=self.book, stock=2)
+        self.book_stock = BookStock.objects.create(book=self.book, quantity=2)
 
     def test_borrow_book_success(self):
         response = self.client.post(
@@ -38,7 +38,7 @@ class BorrowsTestCase(TestCase):
         self.assertEqual(response.json(), "Book borrowed successfully")
 
         book_stock = BookStock.objects.get(book=self.book)
-        self.assertEqual(book_stock.stock, 1)
+        self.assertEqual(book_stock.quantity, 1)
 
         borrow_tx = BookBorrowTransaction.objects.filter(
             borrower=self.user, book=self.book, return_date__isnull=True
@@ -46,8 +46,8 @@ class BorrowsTestCase(TestCase):
         self.assertIsNotNone(borrow_tx)
 
     def test_borrow_book_out_of_stock(self):
-        self.book_stock.stock = 0
-        self.book_stock.save(update_fields=["stock"])
+        self.book_stock.quantity = 0
+        self.book_stock.save(update_fields=["quantity"])
 
         response = self.client.post(
             f"borrowers/{self.user.id_card_number}/borrow",
@@ -63,7 +63,7 @@ class BorrowsTestCase(TestCase):
         self.assertEqual(response.json(), "Book is out of stock")
 
         self.book_stock.refresh_from_db()
-        self.assertEqual(self.book_stock.stock, 0)
+        self.assertEqual(self.book_stock.quantity, 0)
 
     def test_borrow_book_with_active_loan(self):
         BookBorrowTransaction.objects.create(
@@ -107,7 +107,7 @@ class BorrowsTestCase(TestCase):
             borrower=self.user,
             return_scheduled_date=timezone.localdate() + timedelta(days=10),
         )
-        self.book_stock.stock = 4
+        self.book_stock.quantity = 4
         self.book_stock.save()
         response = self.client.post(
             f"borrowers/{self.user.id_card_number}/return",
@@ -122,7 +122,7 @@ class BorrowsTestCase(TestCase):
         self.assertEqual(borrow_tx.return_date, date(2025, 7, 25))
 
         self.book_stock.refresh_from_db()
-        self.assertEqual(self.book_stock.stock, 5)
+        self.assertEqual(self.book_stock.quantity, 5)
 
     def test_return_book_no_active_borrow(self):
         response = self.client.post(

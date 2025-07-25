@@ -42,7 +42,7 @@ def borrow_book(request: HttpRequest, id_card_number: str, data: BorrowRequestSc
     book = get_object_or_404(Book, id=data.book_id)
 
     book_stock, _ = BookStock.objects.get_or_create(book=book)
-    if book_stock.stock < 1:
+    if book_stock.quantity < 1:
         return 400, "Book is out of stock"
 
     has_active_loan = BookBorrowTransaction.objects.filter(
@@ -61,7 +61,7 @@ def borrow_book(request: HttpRequest, id_card_number: str, data: BorrowRequestSc
         return_scheduled_date=data.return_scheduled_date,
     )
 
-    book_stock.stock = F("stock") - 1
+    book_stock.quantity = F("quantity") - 1
     book_stock.save()
 
     return 200, "Book borrowed successfully"
@@ -86,8 +86,8 @@ def return_book(request: HttpRequest, id_card_number: str, data: ReturnRequestSc
     borrow_transaction.return_date = timezone.localdate()
     borrow_transaction.save()
 
-    book_stock = book.stock
-    book_stock.stock = F("stock") + 1
-    book_stock.save(update_fields=["stock"])
+    book_stock: BookStock = book.stock
+    book_stock.quantity = F("quantity") + 1
+    book_stock.save(update_fields=["quantity"])
 
     return 200, None

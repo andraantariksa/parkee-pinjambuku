@@ -22,10 +22,10 @@ class BookStock(models.Model):
     book = models.OneToOneField(
         Book, on_delete=models.CASCADE, primary_key=True, related_name="stock"
     )
-    stock = models.PositiveIntegerField(default=0)
+    quantity = models.PositiveIntegerField(default=0)
 
     class Meta:
         db_table = "book_stock"
 
     def __str__(self):
-        return f"{self.book.title} - Stock: {self.stock}"
+        return f"{self.book.title} - Stock: {self.quantity}"

@@ -38,7 +38,7 @@ Features:
   - `updated_at` - timestamp - nullable
 - `book_stock`
   - `book_id` - uint
-  - `stock` - uint
+  - `quantity` - uint
 - `book_borrow_transaction`
   - `id` - uint - primary key
   - `book_id` - uint - foreign key
