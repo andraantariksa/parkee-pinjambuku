@@ -17,7 +17,7 @@ class BooksTestCase(TestCase):
             isbn="111",
         )
 
-        response = self.client.get("books")
+        response = self.client.get("books/")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             loads(response.content),
