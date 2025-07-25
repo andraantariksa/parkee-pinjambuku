@@ -101,3 +101,29 @@ const fetchTransactions = async (): Promise<BorrowerDetails> => {
     throw new Error(`${response.status} status code`);
   }
 };
+
+export interface AdminTransaction {
+  id: number;
+  user: {
+    id: number;
+    name: string;
+    email: string;
+  };
+  book: Book;
+  created_at: string;
+  return_date: string | null;
+  return_scheduled_date: string;
+}
+
+export const fetchAdminTransactions = async (): Promise<AdminTransaction[]> => {
+  const response = await fetch(`http://127.0.0.1:8000/api/v1/admin/transactions`, {
+    credentials: "include",
+  });
+  if (response.status === 200) {
+    return response.json();
+  } else if (response.status >= 400 && response.status < 500) {
+    throw new Error("Unauthorized");
+  } else {
+    throw new Error(`${response.status} status code`);
+  }
+};

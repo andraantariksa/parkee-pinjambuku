@@ -81,7 +81,7 @@ def return_book(request: HttpRequest, id_card_number: str, data: ReturnRequestSc
     borrow_transaction = BookBorrowTransaction.objects.filter(
         borrower=user,
         book=book,
-        return_date__isnull=True,
+        return_date=None,
     ).first()
     if not borrow_transaction:
         return 400, {"detail": "No active borrow transaction found for this book and user"}

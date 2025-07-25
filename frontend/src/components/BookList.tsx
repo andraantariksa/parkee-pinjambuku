@@ -11,17 +11,6 @@ export default function BookList() {
   const member = memberContext.member;
   const navigate = useNavigate();
 
-  const borrowMutation = useMutation<void, Error, number>({
-    mutationFn: (bookId) =>
-      borrowBook({
-        bookId,
-        idCardNumber: member!.idCardNumber,
-        returnDate: "",
-        email: member!.email,
-        name: member!.name,
-      }),
-  });
-
   const returnMutation = useMutation<void, Error, number>({
     mutationFn: (bookId) =>
       returnBook({
@@ -30,18 +19,25 @@ export default function BookList() {
         email: member!.email,
         name: member!.name,
       }),
+      onSuccess: () => {
+        memberContext.refetch();
+      }
   });
+
+  useEffect(() => {
+    memberContext.refetch();
+  }, []);
 
   useEffect(() => {
     if (member) return;
     navigate("/");
   }, [member, navigate]);
 
-  const isPending = borrowMutation.isPending || returnMutation.isPending;
+  const isPending = returnMutation.isPending;
 
   useEffect(() => {
     refetch();
-  }, [borrowMutation.isSuccess, returnMutation.isSuccess]);
+  }, [returnMutation.isSuccess]);
 
   return (
     <div>
@@ -49,17 +45,17 @@ export default function BookList() {
       {isLoading && <div>Loading...</div>}
       {error && <div style={{ color: "red" }}>Error: {error.message}</div>}
       {returnMutation.error && <p style={{ color: "red" }}>{returnMutation.error.message}</p>}
-      {books && (
+      {books && memberContext.data && (
         <ul>
           {books.map((book: Book) => (
             <li key={book.id}>
               <strong>{book.title}</strong> (ISBN: {book.isbn}){" "}
               <button
                 onClick={() => {
-                  borrowMutation.mutate(book.id);
+                  navigate(`/books/${book.id}/borrow`);
                 }}
                 style={{ marginLeft: "10px" }}
-                disabled={isPending}
+                disabled={isPending || memberContext.borrowTrx}
               >
                 Borrow
               </button>
@@ -68,7 +64,7 @@ export default function BookList() {
                   returnMutation.mutate(book.id);
                 }}
                 style={{ marginLeft: "5px" }}
-                disabled={isPending}
+                disabled={isPending || memberContext.borrowTrx?.book?.id !== book.id}
               >
                 Return
               </button>

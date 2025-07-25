@@ -24,8 +24,8 @@ export default function App() {
           <Router>
             <Routes>
               <Route path="/" element={<Login />} />
-              <Route path="/books" element={<BookList />} />
               <Route path="/books/:id/borrow" element={<BorrowBook />} />
+              <Route path="/books" element={<BookList />} />
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route
                 path="/admin/book-transactions"

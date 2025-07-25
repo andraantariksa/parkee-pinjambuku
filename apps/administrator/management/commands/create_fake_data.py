@@ -13,7 +13,7 @@ class Command(BaseCommand):
 
         # Create fake users
         if not User.objects.filter(email="admin@example.com").exists():
-            user = User(name="Test", email="admin@example.com")
+            user = User(name="Test", email="admin@example.com", id_card_number='123')
             user.set_password("123")
             user.is_staff = True
             user.is_superuser = True
