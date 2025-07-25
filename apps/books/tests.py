@@ -17,9 +17,9 @@ class BooksTestCase(TestCase):
             isbn="111",
         )
 
-        response = self.client.get("")
+        response = self.client.get("books")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             loads(response.content),
-            [{"id": 1, "isbn": "1", "title": "Book 1"}],
+            [{"id": 1, "isbn": "111", "title": "Book 1"}],
         )
