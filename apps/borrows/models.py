@@ -17,4 +17,4 @@ class BookBorrowTransaction(TimestampedModel):
         db_table = "book_borrow_transactions"
 
     def __str__(self):
-        return f"{self.user.username} borrowed {self.book.title}: {self.created} - {self.return_date}"
+        return f"{self.borrower.username} borrowed {self.book.title}: {self.created_at} - {self.return_date}"
