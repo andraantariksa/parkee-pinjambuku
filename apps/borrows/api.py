@@ -13,6 +13,7 @@ from apps.borrows.schema import (
     BorrowerDetailsSchema,
     BorrowRequestSchema,
     ReturnRequestSchema,
+    BorrowersSchema,
 )
 from apps.books.models import BookStock, Book
 from apps.users.models import User
@@ -21,13 +22,13 @@ from apps.users.models import User
 router = Router()
 
 
-@router.get(
+@router.post(
     "borrowers/{id_card_number}",
     response={200: BorrowerDetailsSchema},
     auth=django_auth,
 )
-def borrowers_details(request: HttpRequest, id_card_number: str):
-    user = get_object_or_404(User, id_card_number=id_card_number)
+def borrowers_details(request: HttpRequest, id_card_number: str, data: BorrowersSchema):
+    user = get_object_or_404(User, id_card_number=id_card_number, email=data.email)
     return BorrowerDetailsSchema(
         borrow_transactions=BookBorrowTransaction.objects.filter(borrower=user),
     )

@@ -24,3 +24,7 @@ class BorrowRequestSchema(Schema):
 class ReturnRequestSchema(Schema):
     book_id: int
     email: str
+
+
+class BorrowersSchema(Schema):
+    email: str
