@@ -178,7 +178,9 @@ class BorrowsTestCase(TestCase):
         response = self.client.post("borrowers/000", json={"email": user_1.email})
         self.assertEqual(response.status_code, 404)
 
-        response = self.client.post(f"borrowers/{user_1.id_card_number}", json={"email": user_1.email})
+        response = self.client.post(
+            f"borrowers/{user_1.id_card_number}", json={"email": user_1.email}
+        )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response.json(),
